@@ -1,7 +1,6 @@
 import React from "react";
 
 export const TextInput = ({label, onChange, ...props}) => {
-  console.log({...props})
   return (
     <>
       <label htmlFor={props.id} className="font-semibold mb-px">{label}</label>

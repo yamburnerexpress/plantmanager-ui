@@ -4,14 +4,22 @@ import authFetch from '../helpers/axios';
 import { AddUserPlantForm } from '../components/AddUserPlantForm';
 import { Modal } from '../components/Modal';
 import { Button } from '../components/Button';
-import {ReactComponent as WateringCan} from "../icons/watering-can.svg"
-import { MdDragIndicator } from "react-icons/md";
+import { PlantCard } from '../components/PlantCard';
+import { Group } from '../components/Group';
+import {DndContext} from '@dnd-kit/core'
+import { useSensor, useSensors, TouchSensor, KeyboardSensor, MouseSensor } from '@dnd-kit/core';
 
 export const MyPlants = () => {
   const form = useRef(null);
   const [results, setResults] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
+  const [isDragging, setIsDragging] = useState(null);
   const {logOut} = useAuth();
+  const mouseSensor = useSensor(MouseSensor)
+  const touchSensor = useSensor(TouchSensor)
+  const keyboardSensor = useSensor(KeyboardSensor)
+
+  const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor)
 
   useEffect(() => {
     authFetch("userplants/")
@@ -36,6 +44,19 @@ export const MyPlants = () => {
         "plant_ids": [
           plantId
         ]
+      })
+    )
+    .catch((err) => {
+      console.log(err.message)
+    });
+    getUserPlants();
+  }
+
+  const updatePlantGroup = async (plantId, groupId) => {
+    await authFetch.post(
+      `userplants/${plantId}/update`, 
+      JSON.stringify({
+        "user_group_id": groupId
       })
     )
     .catch((err) => {
@@ -81,11 +102,6 @@ export const MyPlants = () => {
     setModalOpen(false);
   }
 
-  const UTCToLocalDate = (utc) => {
-    var date = new Date(utc + "Z").toLocaleDateString();
-    return date
-  }
-
   let groups = [];
   if (results) {
     var group_sort = results.sort(function(a, b) {
@@ -102,56 +118,65 @@ export const MyPlants = () => {
         return a.plant_data.name.localeCompare(b.plant_data.name)
       })
       const group_plants = plant_sort.map(result => {
+        const beingDragged = isDragging ? isDragging.id === result.id : false
         return (
-          // plant card
-          <li key={result.plant_data.id} className='fle gap-x-2 card-body bg-white rounded-md p-3 card-container h-auto shadow-md'>
-            <div className='flex flex-col justify-between w-full sm:w-96 '>
-            <div className='h-fit flex items-center content-start gap-x-2'>
-              <MdDragIndicator size={'1.5em'} className='cursor-pointer'/>
-              <h2 className='font-bold text-xl'>{result.plant_data.name}</h2>
-              {result.nickname && <h3 className="mb-2 text-slate-600 font-medium">{`"${result.nickname}"`}</h3>}
-            </div>
-            <span className='card-footer flex justify-end'>
-              {result.last_watered && <span className='mr-3 text-sm self-center font-light italic'>
-                Last watered on {UTCToLocalDate(result.last_watered)}
-              </span>}
-              <Button className='aspect-square' label={`water ${result.plant_data.name}`} onClick={waterPlant} params={result.id}><WateringCan /></Button>
-            </span>
-            </div>
-          </li>
+          <PlantCard key={`plant_${result.id}`} id={result.id} data={result} dragged={beingDragged} onWaterClick={waterPlant}/>
         )
       })
       return (
         // group area
-        <React.Fragment key={group.id}>
-          <div className='w-full sm:w-full mx-auto min-h-24 bg-slate-300 bg-opacity-70 border-slate-200 border-2 rounded-md'>
-            <h2 className='w-full bg-slate-200 rounded-t font-bold text-xl px-3 py-2'>{group.name ? group.name : "Unsorted"}</h2>
-            {/* <ul className="flex flex-wrap gap-3 justify-items-center"> */}
-            <ul className="gap-3 p-3 grid lg:grid-cols-2 xl:grid-cols-3">
-              {group_plants}
-            </ul>
-          </div>
+        <React.Fragment key={`group_${group.id}`}>
+          <Group data={group} isDragging={isDragging}>
+            {group_plants}
+          </Group>
         </React.Fragment>
       )
     })
   } 
 
+  const handleDragStart = (e) => {
+    setIsDragging(e.active.data.current)
+  }
+
+  const handleDragEnd = (e) => {
+    setIsDragging(null)
+    if (e.over) {
+      const newResults = [...results]
+      const newGroup = newResults.find((object) => object.id === e.over.id)
+      const fromGroup = newResults.find(object => 
+        object.plants.find(plant => 
+          plant.id === e.active.data.current.id
+        )
+      )
+      fromGroup.plants.splice(fromGroup.plants.indexOf(e.active.data.current), 1)
+      newGroup.plants.push(e.active.data.current)
+      setResults(newResults)
+      updatePlantGroup(e.active.data.current.id, e.over.data.current.id)
+    }
+  }
+
   return (
-    <div className='bg-gradient-to-b from-green-300 to-cyan-500 bg-fixed min-h-screen'>
-      {modalOpen && <Modal>
+    <div className='bg-gradient-to-b from-green-300 to-cyan-500 bg-fixed min-h-screen overflow-y-contain'>
+      {modalOpen && <Modal title='Add Plant' onClose={() => {setModalOpen(false)}}>
         <AddUserPlantForm ref={form} onSubmit={handleSubmit} />  
       </Modal>}
-      <nav className='flex shadow-md p-2 pb-4 bg-white fixed top-0 w-full z-10'>
+      <nav className='flex shadow-md p-2 pb-2 bg-white fixed top-0 w-full z-10'>
         <h1 className='text-2xl font-bold'>My Plants</h1>
-        <button className='ms-auto' onClick={() => logOut()}>Logout</button>
+        <Button variant='square' className='ms-auto h-fit' onClick={() => logOut()}>Logout</Button>
       </nav>
       <main className='pt-20 relative'>
-        <div className="mx-3 sm:mx-auto flex flex-col sm:w-max space-y-5 pb-20" id="plants">
-          {groups}
-        </div>
-        <div className='fixed bottom-0 pb-3 pt-5 ps-3 w-full bg-gradient-to-t from-cyan-500'>
-          <Button onClick={() => setModalOpen(true)} className="">+ Add Plant</Button>
-        </div>
+        <DndContext 
+          sensors={sensors}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
+          <div className="overscroll-none mx-3 sm:mx-auto flex flex-col sm:w-max space-y-5 pb-20" id="plants">
+            {groups}
+          </div>
+          <div className='fixed bottom-0 pb-3 pt-5 ps-3 w-full bg-gradient-to-t from-cyan-500'>
+            <Button onClick={() => setModalOpen(true)} className="">+ Add Plant</Button>
+          </div>
+        </DndContext>
       </main>
       
     </div>

@@ -1,7 +1,6 @@
 import React from "react";
 
 export const SelectInput = ({children, label, onChange, ...props}) => {
-  console.log({...props})
   return (
     <>
       <label htmlFor={props.id} className="font-semibold mb-px">{label}</label>
