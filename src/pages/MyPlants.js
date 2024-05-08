@@ -6,6 +6,7 @@ import { Modal } from '../components/Modal';
 import { Button } from '../components/Button';
 import { PlantCard } from '../components/PlantCard';
 import { Group } from '../components/Group';
+import { DotLoader } from 'react-spinners';
 import {DndContext} from '@dnd-kit/core'
 import { useSensor, useSensors, TouchSensor, KeyboardSensor, MouseSensor } from '@dnd-kit/core';
 
@@ -22,11 +23,14 @@ export const MyPlants = () => {
   const sensors = useSensors(mouseSensor, touchSensor, keyboardSensor)
 
   useEffect(() => {
-    authFetch("userplants/")
+    const fetchData = async () => {
+      authFetch("userplants/")
       .then((response) => {setResults(response.data)})
       .catch((err) => {
         console.log(err.message);
       });
+    }
+    fetchData();
   }, [])
 
   const getUserPlants = async () => {
@@ -37,24 +41,22 @@ export const MyPlants = () => {
       });
   }
 
-  const waterPlant = async (plantId) => {
+  const waterPlants = async (plantIds) => {
     await authFetch.post(
       "userplants/water/", 
       JSON.stringify({
-        "plant_ids": [
-          plantId
-        ]
+        "plant_ids": plantIds
       })
     )
     .catch((err) => {
       console.log(err.message)
     });
-    getUserPlants();
+    await getUserPlants();
   }
 
   const updatePlantGroup = async (plantId, groupId) => {
     await authFetch.post(
-      `userplants/${plantId}/update`, 
+      `userplants/${plantId}/update/`, 
       JSON.stringify({
         "user_group_id": groupId
       })
@@ -62,7 +64,7 @@ export const MyPlants = () => {
     .catch((err) => {
       console.log(err.message)
     });
-    getUserPlants();
+    await getUserPlants();
   }
 
 
@@ -105,28 +107,24 @@ export const MyPlants = () => {
   let groups = [];
   if (results) {
     var group_sort = results.sort(function(a, b) {
-      if (a.is_default) {
-        return 1
-      } else if (b.is_default) {
-        return -1
-      } else {
-        return a.name.localeCompare(b.name)
+      if ((a.is_default) !== (b.is_default)) {
+        return a.is_default ? 1 : -1;
       }
+        return a.name.localeCompare(b.name)
     });
     groups = group_sort.map(group => {
       var plant_sort = group.plants.sort(function(a, b) {
         return a.plant_data.name.localeCompare(b.plant_data.name)
       })
       const group_plants = plant_sort.map(result => {
-        const beingDragged = isDragging ? isDragging.id === result.id : false
         return (
-          <PlantCard key={`plant_${result.id}`} id={result.id} data={result} dragged={beingDragged} onWaterClick={waterPlant}/>
+          <PlantCard key={`plant_${result.id}`} id={result.id} data={result} dragged={isDragging} onWaterClick={waterPlants}/>
         )
       })
       return (
         // group area
         <React.Fragment key={`group_${group.id}`}>
-          <Group data={group} isDragging={isDragging}>
+          <Group data={group} isDragging={isDragging} onWaterClick={waterPlants}>
             {group_plants}
           </Group>
         </React.Fragment>
@@ -138,7 +136,7 @@ export const MyPlants = () => {
     setIsDragging(e.active.data.current)
   }
 
-  const handleDragEnd = (e) => {
+  const handleDragEnd = async (e) => {
     setIsDragging(null)
     if (e.over) {
       const newResults = [...results]
@@ -148,7 +146,12 @@ export const MyPlants = () => {
           plant.id === e.active.data.current.id
         )
       )
-      fromGroup.plants.splice(fromGroup.plants.indexOf(e.active.data.current), 1)
+
+      fromGroup.plants.splice(
+        fromGroup.plants.indexOf(
+          fromGroup.plants.find(
+            plant => plant.id === e.active.data.current.id
+          )), 1)
       newGroup.plants.push(e.active.data.current)
       setResults(newResults)
       updatePlantGroup(e.active.data.current.id, e.over.data.current.id)
@@ -165,7 +168,8 @@ export const MyPlants = () => {
         <Button variant='square' className='ms-auto h-fit' onClick={() => logOut()}>Logout</Button>
       </nav>
       <main className='pt-20 relative'>
-        <DndContext 
+        {results.length > 0 
+        ? <DndContext 
           sensors={sensors}
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
@@ -173,10 +177,13 @@ export const MyPlants = () => {
           <div className="overscroll-none mx-3 sm:mx-auto flex flex-col sm:w-max space-y-5 pb-20" id="plants">
             {groups}
           </div>
-          <div className='fixed bottom-0 pb-3 pt-5 ps-3 w-full bg-gradient-to-t from-cyan-500'>
+          <div className='fixed bottom-0 pb-3 pt-5 ps-3 w-full bg-gradient-to-t from-cyan-500 z-10'>
             <Button onClick={() => setModalOpen(true)} className="">+ Add Plant</Button>
           </div>
         </DndContext>
+        : <div className='w-full my-auto flex justify-center'>
+            <DotLoader className='mt-10' color='#15353e'/>
+          </div>}
       </main>
       
     </div>

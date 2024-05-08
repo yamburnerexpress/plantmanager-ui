@@ -5,7 +5,7 @@ export const Button = ({onClick, label, className="", params=null, children, var
   let classStr;
   switch (variant) {
     case "square":
-      classStr = 'shadow-md bg-blue-500 hover:bg-blue-700 text-white font-bold p-3 rounded';
+      classStr = 'shadow-md bg-blue-500 hover:bg-blue-700 text-white font-bold px-3 py-2 rounded';
       break;
     default:
       classStr = 'shadow-md bg-blue-500 hover:bg-blue-700 text-white font-bold p-3 rounded-full';
