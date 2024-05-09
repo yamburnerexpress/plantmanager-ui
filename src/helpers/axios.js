@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const authFetch = axios.create({
-  baseURL: "/api/",
+  baseURL: `${process.env.REACT_APP_API_URI}/api/`,
   headers: {
     "Content-type": "application/json",
   }

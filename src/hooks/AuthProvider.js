@@ -9,7 +9,7 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const loginAction = async (data) => {
     try {
-      const response = await fetch("/api/auth/login/", {
+      const response = await fetch(`${process.env.REACT_APP_API_URI}/api/auth/login/`, {
         method: "POST",
         body: data,
       });
