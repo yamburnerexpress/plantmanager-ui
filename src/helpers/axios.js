@@ -26,7 +26,7 @@ const refreshToken = async () => {
     console.log("refresh token", resp.data);
     return resp.data;
   } catch (e) {
-    console.log("Error",e);   
+    Promise.reject(e) 
   }
 };
 

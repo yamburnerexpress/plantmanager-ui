@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { useAuth } from '../hooks/AuthProvider';
-import authFetch from '../helpers/axios';
+// import authFetch from '../helpers/axios';
 import { AddUserPlantForm } from '../components/AddUserPlantForm';
 import { Modal } from '../components/Modal';
 import { Button } from '../components/Button';
@@ -15,7 +15,7 @@ export const MyPlants = () => {
   const [results, setResults] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(null);
-  const {logOut} = useAuth();
+  const {logOut, authFetch} = useAuth();
   const mouseSensor = useSensor(MouseSensor)
   const touchSensor = useSensor(TouchSensor)
   const keyboardSensor = useSensor(KeyboardSensor)
