@@ -39,7 +39,7 @@ const AuthProvider = ({ children }) => {
     setRefreshToken("");
     localStorage.removeItem("site");
     localStorage.removeItem("refresh");
-    navigate("/");
+    navigate("/login");
   };
 
   return (

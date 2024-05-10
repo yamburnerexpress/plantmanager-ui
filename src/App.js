@@ -11,9 +11,12 @@ function App() {
       <Router>
         <AuthProvider>
           <Routes>
-            <Route path="/" element={<LoginForm />} />
+            <Route path="/login" element={<LoginForm />} />
             <Route element={<PrivateRoute />}>
               <Route path="/myplants" element={<MyPlants />} />
+            </Route>
+            <Route element={<PrivateRoute />}>
+              <Route path="/" element={<MyPlants />} />
             </Route>
             {/* Other routes */}
           </Routes>
