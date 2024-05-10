@@ -31,6 +31,7 @@ export const MyPlants = () => {
       });
     }
     fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const getUserPlants = async () => {
