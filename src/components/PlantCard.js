@@ -46,10 +46,13 @@ export const PlantCard = (props) => {
             <MdDragIndicator size={'1.5em'} className='mt-px cursor-pointer h-fit'/>
           </button>
         <div className='flex flex-col justify-between w-full h-full'>
-          <h3 
-            onClick={props.onClick}
-            className={'align-top font-bold text-xl' + (!data.plant_data.scientific_name ? ' mb-6' : '')}
-          >{data.plant_data.name}</h3>
+          <button className={'w-fit cursor-pointer align-top font-bold text-xl' + (!data.plant_data.scientific_name ? ' mb-6' : '')}>
+            <h3 
+              onClick={props.onClick}
+              className='font-bold text-xl'
+            >{data.plant_data.name}</h3>
+          </button>
+          
           {data.plant_data.scientific_name && <h4 className="text-slate-600 font-medium text-sm">{data.plant_data.scientific_name}</h4>}
           <span className='card-footer flex justify-end self-end'>
             {data.last_watered && <span className='mr-3 text-sm self-center font-light italic'>

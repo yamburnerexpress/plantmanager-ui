@@ -26,9 +26,9 @@ export const Modal = (props) => {
   const {closeModal} = useModalContext();
 
   return (
-    <div onClick={closeModal} className='bg-slate-700 bg-opacity-70 fixed z-50 justify-center items-center w-full h-full'>
-      <div className='relative p-4 w-full mx-auto max-w-2xl max-h-full'>
-        <div onClick={(e) => e.stopPropagation()} className='w-full px-3 bg-white rounded-md py-6 px-6'>
+    <div onClick={closeModal} className='bg-slate-700 bg-opacity-70 fixed z-50 justify-center items-center w-full h-screen'>
+      <div className='w-full mx-auto max-w-2xl h-full p-4'>
+        <div onClick={(e) => e.stopPropagation()} className='w-full px-3 bg-white rounded-md py-6 px-6 max-h-full'>
           {props.children}
         </div>
       </div>

@@ -10,18 +10,20 @@ import { Button } from "./Button";
 const PlantNotes = ({data}) => {
 
   return (
-    <ul className="w-full flex flex-col gap-y-5">
-      {data.map(note => {
-        return (
-          <li key={note.id}>
-            <h3 className="text-sm font-semibold text-gray-600 mb-2">
-              {new Date(note.created_at + "Z").toLocaleString()}
-            </h3>
-            <span className="ml-3">{note.note}</span>
-          </li>
-        )
-      })}
-    </ul>
+    <div className="py-5 max-h-80 sm:max-h-96 overflow-auto">
+      <ul className="w-full space-y-5">
+        {data.map(note => {
+          return (
+            <li key={note.id}>
+              <h3 className="text-sm font-semibold text-gray-600 mb-2">
+                {new Date(note.created_at + "Z").toLocaleString()}
+              </h3>
+              <span className="ml-3">{note.note}</span>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
   )
 }
 
@@ -137,16 +139,18 @@ export const PlantInfo = ({data}) => {
             <span>{waterRequirements}</span>
           </li>}
       </ul>
-      <div id="notes" className="border-t border-gray-400 pt-5">
-        <form ref={form} className={"flex flex-col gap-y-3"} onSubmit={submitNote}>
-          <label htmlFor="note">Note:</label>
+      <div id="notes" className="">
+        <form ref={form} className={"flex flex-col"} onSubmit={submitNote}>
+          {/* <label htmlFor="note" className="mb-2">Note:</label> */}
           <textarea 
             id="note" 
             name="note" 
             required 
             value={noteVal} 
             onChange={e => setNoteVal(e.target.value)} 
-            className="border border-gray-700 h-16 rounded px-2 py-px"
+            aria-label="New Note"
+            placeholder="Enter note..."
+            className="border border-gray-700 h-16 rounded px-2 py-px mb-3"
           />
           <Button type="submit" variant="square" className="w-full mb-5">Add Note</Button>
         </form>
