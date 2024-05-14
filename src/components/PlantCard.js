@@ -34,13 +34,22 @@ export const PlantCard = (props) => {
   }
 
   return (
-    <li key={`li_${data.id}`} style={style} ref={setNodeRef} id={data.id} className={(props.dragged && props.dragged.id !== data.id ? 'opacity-30' : '') + ' flex gap-x-2 card-body bg-white rounded-md p-3 card-container h-auto shadow-md'}>
+    <li 
+      key={`li_${data.id}`} 
+      style={style} 
+      ref={setNodeRef} 
+      id={data.id} 
+      className={(props.dragged && props.dragged.id !== data.id ? 'opacity-30' : '') + ' flex gap-x-2 card-body bg-white rounded-md p-3 card-container h-auto shadow-md'}
+    >
       <div className='flex w-full sm:w-96 items-start gap-2'>
           <button {...listeners} {...attributes} className='select-none touch-manipulation'>
             <MdDragIndicator size={'1.5em'} className='mt-px cursor-pointer h-fit'/>
           </button>
         <div className='flex flex-col justify-between w-full h-full'>
-          <h3 className={'align-top font-bold text-xl' + (!data.plant_data.scientific_name ? ' mb-6' : '')}>{data.plant_data.name}</h3>
+          <h3 
+            onClick={props.onClick}
+            className={'align-top font-bold text-xl' + (!data.plant_data.scientific_name ? ' mb-6' : '')}
+          >{data.plant_data.name}</h3>
           {data.plant_data.scientific_name && <h4 className="text-slate-600 font-medium text-sm">{data.plant_data.scientific_name}</h4>}
           <span className='card-footer flex justify-end self-end'>
             {data.last_watered && <span className='mr-3 text-sm self-center font-light italic'>

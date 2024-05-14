@@ -1,19 +1,20 @@
 import React, {useState, useEffect, useRef} from 'react';
 import { useAuth } from '../hooks/AuthProvider';
-// import authFetch from '../helpers/axios';
+import { useModalContext } from '../hooks/ModalProvider';
 import { AddUserPlantForm } from '../components/AddUserPlantForm';
-import { Modal } from '../components/Modal';
+import { Modal, ModalHeader, ModalContent } from '../components/Modal';
 import { Button } from '../components/Button';
 import { PlantCard } from '../components/PlantCard';
 import { Group } from '../components/Group';
 import { DotLoader } from 'react-spinners';
-import {DndContext} from '@dnd-kit/core'
+import { DndContext } from '@dnd-kit/core'
 import { useSensor, useSensors, TouchSensor, KeyboardSensor, MouseSensor } from '@dnd-kit/core';
+import { PlantInfo } from '../components/PlantInfo';
 
 export const MyPlants = () => {
   const form = useRef(null);
   const [results, setResults] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
+  const {modalOpen, setModalOpen, closeModal} = useModalContext();
   const [isDragging, setIsDragging] = useState(null);
   const {logOut, authFetch} = useAuth();
   const mouseSensor = useSensor(MouseSensor)
@@ -71,7 +72,6 @@ export const MyPlants = () => {
 
   const handleSubmit = async e => {
     e.preventDefault()
-    console.log(form.current)
     const formData = Object.fromEntries(new FormData(form.current))
     const postPlant = await authFetch.post(
         "plants/create/",
@@ -102,7 +102,7 @@ export const MyPlants = () => {
         console.log(err.message)
       });
     await getUserPlants();
-    setModalOpen(false);
+    closeModal();
   }
 
   let groups = [];
@@ -119,7 +119,7 @@ export const MyPlants = () => {
       })
       const group_plants = plant_sort.map(result => {
         return (
-          <PlantCard key={`plant_${result.id}`} id={result.id} data={result} dragged={isDragging} onWaterClick={waterPlants}/>
+          <PlantCard key={`plant_${result.id}`} onClick={() => setModalOpen({name: 'PLANT_INFO', data: result})} id={result.id} data={result} dragged={isDragging} onWaterClick={waterPlants}/>
         )
       })
       return (
@@ -161,9 +161,26 @@ export const MyPlants = () => {
 
   return (
     <div className='bg-gradient-to-b from-green-300 to-cyan-500 bg-fixed min-h-screen overflow-y-contain'>
-      {modalOpen && <Modal title='Add Plant' onClose={() => {setModalOpen(false)}}>
-        <AddUserPlantForm ref={form} onSubmit={handleSubmit} />  
-      </Modal>}
+      {(modalOpen && modalOpen.name === 'ADD_PLANT') && 
+        <Modal>
+          <ModalHeader>
+            <h2 className='text-xl font-bold'>Add Plant</h2>
+          </ModalHeader>
+          <ModalContent>
+            <AddUserPlantForm ref={form} onSubmit={handleSubmit} />  
+          </ModalContent>
+        </Modal>
+      }
+      {(modalOpen && modalOpen.name === 'PLANT_INFO') && 
+        <Modal>
+          <ModalHeader>
+            <h2 className='text-xl font-bold'>{modalOpen.data.plant_data.name}</h2>
+          </ModalHeader>
+          <ModalContent>
+            <PlantInfo data={modalOpen.data} /> 
+          </ModalContent>
+        </Modal>
+      }
       <nav className='flex shadow-md p-2 pb-2 bg-white fixed top-0 w-full z-10'>
         <h1 className='text-2xl font-bold'>My Plants</h1>
         <Button variant='square' className='ms-auto h-fit' onClick={() => logOut()}>Logout</Button>
@@ -179,7 +196,7 @@ export const MyPlants = () => {
             {groups}
           </div>
           <div className='fixed bottom-0 pb-3 pt-5 ps-3 w-full bg-gradient-to-t from-cyan-500 z-10'>
-            <Button onClick={() => setModalOpen(true)} className="">+ Add Plant</Button>
+            <Button onClick={() => setModalOpen({name: 'ADD_PLANT'})} className="">+ Add Plant</Button>
           </div>
         </DndContext>
         : <div className='w-full my-auto flex justify-center'>
