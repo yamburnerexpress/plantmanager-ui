@@ -2,7 +2,7 @@ import React, {useState, useEffect, useRef} from 'react';
 import { useAuth } from '../hooks/AuthProvider';
 import { useModalContext } from '../hooks/ModalProvider';
 import { AddUserPlantForm } from '../components/AddUserPlantForm';
-import { Modal, ModalHeader, ModalContent } from '../components/Modal';
+import { Modal, ModalHeader, ModalContent, ModalFooter } from '../components/Modal';
 import { Button } from '../components/Button';
 import { PlantCard } from '../components/PlantCard';
 import { Group } from '../components/Group';
@@ -169,6 +169,9 @@ export const MyPlants = () => {
           <ModalContent>
             <AddUserPlantForm ref={form} onSubmit={handleSubmit} />  
           </ModalContent>
+          <ModalFooter>
+            <Button variant='square' type='submit' form='addUserPlant'>Save</Button>
+          </ModalFooter>
         </Modal>
       }
       {(modalOpen && modalOpen.name === 'PLANT_INFO') && 
@@ -179,6 +182,9 @@ export const MyPlants = () => {
           <ModalContent>
             <PlantInfo data={modalOpen.data} /> 
           </ModalContent>
+          <ModalFooter>
+            <Button variant='square' onClick={closeModal}>Close</Button>
+          </ModalFooter>
         </Modal>
       }
       <nav className='flex shadow-md p-2 pb-2 bg-white fixed top-0 w-full z-10'>

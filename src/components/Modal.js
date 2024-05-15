@@ -22,6 +22,14 @@ export const ModalContent = (props) => {
   )
 }
 
+export const ModalFooter = (props) => {
+  return (
+    <div class="flex flex-shrink-0 flex-wrap items-center justify-end p-3 border-t border-gray-200 rounded-b-md">
+      {props.children}
+    </div>
+  )
+}
+
 export const Modal = (props) => {
   const {closeModal} = useModalContext();
 

@@ -10,7 +10,7 @@ import { Button } from "./Button";
 const PlantNotes = ({data}) => {
 
   return (
-    <div className="py-5 max-h-80 sm:max-h-96 overflow-auto">
+    <div className="py-5 sm:max-h-96 overflow-auto">
       <ul className="w-full space-y-5">
         {data.map(note => {
           return (
@@ -139,7 +139,7 @@ export const PlantInfo = ({data}) => {
             <span>{waterRequirements}</span>
           </li>}
       </ul>
-      <div id="notes" className="">
+      <div id="notes" className="mt-5">
         <form ref={form} className={"flex flex-col"} onSubmit={submitNote}>
           {/* <label htmlFor="note" className="mb-2">Note:</label> */}
           <textarea 

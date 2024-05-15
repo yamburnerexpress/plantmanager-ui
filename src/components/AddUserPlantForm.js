@@ -1,7 +1,6 @@
 import React, {useState, forwardRef} from "react";
 import { TextInput } from "./TextInput";
 import { SelectInput } from "./SelectInput";
-import { Button } from "./Button";
 
 export const AddUserPlantForm = forwardRef((props, ref) => {
   const [plantName, setPlantName] = useState("");
@@ -45,7 +44,7 @@ export const AddUserPlantForm = forwardRef((props, ref) => {
         <option value="SHADE">Shade</option>
       </SelectInput>
       <TextInput label="Count" type="number" min="0" value={count} id="count" name="count" onChange={e => setCount(e.target.value)}/>
-      <Button type="submit" variant="square" className="mt-6">Add Plant</Button>
+      {/* <Button type="submit" variant="square" className="mt-6">Add Plant</Button> */}
     </form>
   )
 })
