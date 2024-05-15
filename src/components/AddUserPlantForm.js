@@ -15,7 +15,7 @@ export const AddUserPlantForm = forwardRef((props, ref) => {
   const [count, setCount] = useState(1);
 
   return (
-    <form id="addUserPlant" className={"flex flex-col space-between-3"} ref={ref} onSubmit={props.onSubmit}>
+    <form id="addUserPlant" className={"max-h-full flex flex-col space-between-3"} ref={ref} onSubmit={props.onSubmit}>
       <TextInput label="Plant Name" type="text" id="plantName" name="name" required value={plantName} onChange={e => setPlantName(e.target.value)}/>
       <TextInput label="Scientific Name" type="text" id="scientificName" name="scientific_name" value={scientificName} onChange={e => setScientificName(e.target.value)}/>
       <TextInput label="Nickname" type="text" id="nickname" name="nickname" value={nickname} onChange={e => setNickname(e.target.value)}/>
