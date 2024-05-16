@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/AuthProvider';
 import { useModalContext } from '../hooks/ModalProvider';
 import { AddUserPlantForm } from '../components/AddUserPlantForm';
 import { Modal, ModalHeader, ModalContent, ModalFooter } from '../components/Modal';
+import { Nav } from '../components/Nav';
 import { Button } from '../components/Button';
 import { PlantCard } from '../components/PlantCard';
 import { Group } from '../components/Group';
@@ -16,7 +17,7 @@ export const MyPlants = () => {
   const [results, setResults] = useState([]);
   const {modalOpen, setModalOpen, closeModal} = useModalContext();
   const [isDragging, setIsDragging] = useState(null);
-  const {logOut, authFetch} = useAuth();
+  const {authFetch} = useAuth();
   const mouseSensor = useSensor(MouseSensor)
   const touchSensor = useSensor(TouchSensor)
   const keyboardSensor = useSensor(KeyboardSensor)
@@ -187,10 +188,7 @@ export const MyPlants = () => {
           </ModalFooter>
         </Modal>
       }
-      <nav className='flex shadow-md p-2 pb-2 bg-white fixed top-0 w-full z-10'>
-        <h1 className='text-2xl font-bold'>My Plants</h1>
-        <Button variant='square' className='ms-auto h-fit' onClick={() => logOut()}>Logout</Button>
-      </nav>
+      <Nav title='My Plants' />
       <main className='pt-20 relative'>
         {results.length > 0 
         ? <DndContext 

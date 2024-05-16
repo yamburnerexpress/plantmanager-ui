@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { LoginForm } from './pages/LoginForm';
 import { MyPlants } from './pages/MyPlants';
+import { ChangePassword } from './pages/ChangePassword';
 import AuthProvider from './hooks/AuthProvider';
 import { ModalProvider } from './hooks/ModalProvider';
 import PrivateRoute from './router/route';
@@ -19,6 +20,9 @@ function App() {
               </Route>
               <Route element={<PrivateRoute />}>
                 <Route path="/" element={<MyPlants />} />
+              </Route>
+              <Route element={<PrivateRoute />}>
+                <Route path="/changepassword" element={<ChangePassword />} />
               </Route>
               {/* Other routes */}
             </Routes>
