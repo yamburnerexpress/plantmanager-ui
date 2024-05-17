@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
 import { useAuth } from '../hooks/AuthProvider';
 import "../App.css"
+import { Link } from 'react-router-dom';
 
 export const LoginForm = () => {
   const {loginAction} = useAuth();
@@ -21,7 +22,10 @@ export const LoginForm = () => {
             <input id="username" name="username" className='border border-black rounded mb-3 px-2 py-px'/>
             <label htmlFor="password" className='font-semibold mb-px'>Password</label>
             <input id="password" name="password" className='border border-black rounded mb-3 px-2 py-px' type="password" />
-            <button type="submit" className='font-semibold ml-auto bg-green-300 hover:bg-green-500 px-3 py-2 rounded-md shadow'>Login</button>
+            <div className='w-full flex flex-row justify-end items-center gap-x-3'>
+              <Link to="/register" className='font-semibold'>Sign Up</Link>
+              <button type="submit" className='font-semibold bg-green-300 hover:bg-green-500 active:bg-green-500 px-3 py-2 rounded-md shadow'>Login</button>
+            </div>
           </form>
         </div>
       </main>

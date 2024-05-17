@@ -130,12 +130,12 @@ export const PlantInfo = ({data}) => {
         </li>
         {sunRequirements && 
           <li className="flex gap-x-2 items-center">
-            <MdSunny />
+            <MdSunny aria-label="sun requirements"/>
             <span>{sunRequirements}</span>
           </li>}
         {waterRequirements && 
           <li className="flex gap-x-2 items-center">
-            <IoWater />
+            <IoWater aria-label="water requirements"/>
             <span>{waterRequirements}</span>
           </li>}
       </ul>

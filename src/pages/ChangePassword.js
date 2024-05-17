@@ -14,7 +14,6 @@ export const ChangePassword = () => {
   }
 
   const postChangePassword = async (data) => {
-    console.log(JSON.stringify(data))
     await authFetch.post(
       "users/me/changepassword/", 
       JSON.stringify(data)

@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { LoginForm } from './pages/LoginForm';
+import { Registration } from './pages/Registration';
 import { MyPlants } from './pages/MyPlants';
 import { ChangePassword } from './pages/ChangePassword';
 import AuthProvider from './hooks/AuthProvider';
@@ -15,6 +16,7 @@ function App() {
           <ModalProvider>
             <Routes>
               <Route path="/login" element={<LoginForm />} />
+              <Route path="/register" element={<Registration />} />
               <Route element={<PrivateRoute />}>
                 <Route path="/myplants" element={<MyPlants />} />
               </Route>

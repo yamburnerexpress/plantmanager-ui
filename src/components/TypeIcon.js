@@ -12,17 +12,17 @@ export const TypeIcon = ({type}) => {
 
   switch (type) {
     case "TREE":
-      return <FaTree />;
+      return <FaTree aria-label="tree"/>;
     case "LEAFY_PLANT":
-      return <PiPlantFill />;
+      return <PiPlantFill aria-label="leafy plant"/>;
     case "SUCCULENT":
-      return <PiCactusFill />;
+      return <PiCactusFill aria-label="succulent"/>;
     case "HERB":
-      return <PiLeafFill />;
+      return <PiLeafFill aria-label="herb"/>;
     case "VEGETABLE":
-      return <PiCarrotFill />;
+      return <PiCarrotFill aria-label="vegetable"/>;
     case "FLOWER":
-      return <PiFlowerTulipBold />;
+      return <PiFlowerTulipBold aria-label="flower"/>;
     default:
       return false;
   }
