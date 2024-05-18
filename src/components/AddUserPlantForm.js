@@ -12,6 +12,7 @@ export const AddUserPlantForm = forwardRef((props, ref) => {
   const [wateringTime, setWateringTime] = useState();
   const [sunRequirements, setSunRequirements] = useState();
   const [count, setCount] = useState(1);
+  const [extLink, setExtLink] = useState("");
 
   return (
     <form id="addUserPlant" className={"max-h-full flex flex-col space-between-3"} ref={ref} onSubmit={props.onSubmit}>
@@ -19,12 +20,12 @@ export const AddUserPlantForm = forwardRef((props, ref) => {
       <TextInput label="Scientific Name" type="text" id="scientificName" name="scientific_name" value={scientificName} onChange={e => setScientificName(e.target.value)}/>
       <TextInput label="Nickname" type="text" id="nickname" name="nickname" value={nickname} onChange={e => setNickname(e.target.value)}/>
       <SelectInput label="Plant Type" id="plantTypeMenu" name="type" value={type} onChange={e => setType(e.target.value)}>
-        <option value="flower">Flower</option>
-        <option value="herb">Herb</option>
-        <option value="leafy plant">Leafy Plant</option>
-        <option value="succulent">Succulent</option>
-        <option value="tree">Tree</option>
-        <option value="vegetable">Vegetable</option>
+        <option value="FLOWER">Flower</option>
+        <option value="HERB">Herb</option>
+        <option value="LEAFY_PLANT">Leafy Plant</option>
+        <option value="SUCCULENT">Succulent</option>
+        <option value="TREE">Tree</option>
+        <option value="VEGETABLE">Vegetable</option>
       </SelectInput>
       <TextInput label="Watering Frequency" type="number" min="0" id="wateringFreq" name="watering_freq" value={wateringFreq} onChange={e => setWateringFreq(e.target.value)}/>
       <SelectInput label="Watering Period" id="wateringPeriodMenu" name="watering_period" value={wateringPeriod} onChange={e => setWateringPeriod(e.target.value)}>
@@ -44,6 +45,7 @@ export const AddUserPlantForm = forwardRef((props, ref) => {
         <option value="SHADE">Shade</option>
       </SelectInput>
       <TextInput label="Count" type="number" min="0" value={count} id="count" name="count" onChange={e => setCount(e.target.value)}/>
+      <TextInput label="External Link" type="url" id="externalLink" name="external_link" placeholder="https://example.com" pattern="https://.*" value={extLink} onChange={e => setExtLink(e.target.value)}/>
       {/* <Button type="submit" variant="square" className="mt-6">Add Plant</Button> */}
     </form>
   )

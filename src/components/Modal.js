@@ -7,10 +7,10 @@ export const ModalHeader = (props) => {
 
   return (
     <div className='flex flex-shrink-0 items-center justify-between p-4 border-b border-gray-200 rounded-t-md'>
-      <span className='flex'>
+      <span className='flex items-center gap-x-2'>
         {props.children}
       </span>
-      <button onClick={closeModal} className='text-xl font-bold'>X</button>
+      <button onClick={closeModal} aria-label='Close modal' className='text-xl font-bold'>X</button>
     </div>
   )
 }
