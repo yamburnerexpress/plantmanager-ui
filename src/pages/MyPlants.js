@@ -21,7 +21,6 @@ export const MyPlants = () => {
   const form = useRef(null);
   const groupForm = useRef(null);
   const [results, setResults] = useState([]);
-  const [groupData, setGroupData] = useState([]);
   const {modalOpen, setModalOpen, closeModal} = useModalContext();
   const [isDragging, setIsDragging] = useState(null);
   const {authFetch} = useAuth();
@@ -36,12 +35,6 @@ export const MyPlants = () => {
     await authFetch("userplants/")
       .then((response) => {
         setResults(response.data)
-        setGroupData(response.data.sort(function(a, b) {
-          if ((a.is_default) !== (b.is_default)) {
-            return a.is_default ? 1 : -1;
-          }
-            return a.name.localeCompare(b.name)
-        }));
       })
       .catch((err) => {
         console.log(err.message);
@@ -145,10 +138,7 @@ export const MyPlants = () => {
     })
     .catch((err) => {
       console.log(err.message)
-    }
-  );
-    
-    
+    });
   }
 
   const handleGroupSubmit = async e => {
@@ -158,7 +148,7 @@ export const MyPlants = () => {
     closeModal();
   }
   
-  const groups = groupData.map(group => {
+  const groups = results.map(group => {
     var plant_sort = group.plants.sort(function(a, b) {
       return a.plant_data.name.localeCompare(b.plant_data.name)
     })
