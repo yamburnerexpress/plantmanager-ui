@@ -25,7 +25,7 @@ export const ModalContent = (props) => {
 
 export const ModalFooter = (props) => {
   return (
-    <div className="flex flex-shrink-0 flex-wrap items-center justify-end p-3 border-t border-gray-200 rounded-b-md">
+    <div className="flex flex-shrink-0 flex-wrap items-center justify-end gap-x-2 p-3 border-t border-gray-200 rounded-b-md">
       {props.children}
     </div>
   )
