@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import { Button } from '../components/Button';
-import {ReactComponent as WateringCan} from "../icons/watering-can.svg"
+import { Button } from '../../../components/Button';
+import {ReactComponent as WateringCan} from "../../../icons/watering-can.svg"
 import { MdDragIndicator } from "react-icons/md";
 import { useDraggable } from '@dnd-kit/core';
 import {CSS} from '@dnd-kit/utilities';

@@ -1,26 +1,28 @@
 import React, {useState, useEffect, useRef, useCallback} from 'react';
-import { useAuth } from '../hooks/AuthProvider';
-import { useModalContext } from '../hooks/ModalProvider';
-import { AddUserPlantForm } from '../components/AddUserPlantForm';
-import { Modal, ModalHeader, ModalContent, ModalFooter } from '../components/Modal';
-import { Nav } from '../components/Nav';
-import { Button } from '../components/Button';
-import { PlantCard } from '../components/PlantCard';
-import { Group } from '../components/Group';
+import { useAuth } from '../../hooks/AuthProvider';
+import { useModalContext } from '../../hooks/ModalProvider';
+import { AddUserPlantForm } from './components/AddUserPlantForm';
+import { Modal, ModalHeader, ModalContent, ModalFooter } from '../../components/Modal';
+import { Nav } from '../../components/Nav';
+import { Button } from '../../components/Button';
+import { PlantCard } from './components/PlantCard';
+import { Group } from '../../components/Group';
 import { DotLoader } from 'react-spinners';
 import { LuExternalLink } from "react-icons/lu";
 import { DndContext } from '@dnd-kit/core'
 import { useSensor, useSensors, TouchSensor, KeyboardSensor, MouseSensor } from '@dnd-kit/core';
-import { PlantInfo } from '../components/PlantInfo';
-import { TextInput } from '../components/TextInput';
-import { onClickUrl } from '../helpers/onClickUrl';
+import { PlantInfo } from './components/PlantInfo';
+import { TextInput } from '../../components/TextInput';
+import { onClickUrl } from '../../helpers/onClickUrl';
 import { ToastContainer, toast } from 'react-toastify';
+import { EmptyState } from './components/EmptyState';
 import 'react-toastify/dist/ReactToastify.css';
 
 export const MyPlants = () => {
   const form = useRef(null);
   const groupForm = useRef(null);
   const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const {modalOpen, setModalOpen, closeModal} = useModalContext();
   const [isDragging, setIsDragging] = useState(null);
   const {authFetch} = useAuth();
@@ -32,7 +34,7 @@ export const MyPlants = () => {
   const notify = (msg) => toast(msg);
 
   const getUserPlants = useCallback(async () => {
-    await authFetch("userplants/")
+    return await authFetch("userplants/")
       .then((response) => {
         setResults(response.data)
       })
@@ -41,9 +43,14 @@ export const MyPlants = () => {
       });
   }, [authFetch])
 
+  const loadDashboard = useCallback(async () => {
+    await getUserPlants()
+    setIsLoading(false)
+  }, [getUserPlants, setIsLoading])
+
   useEffect(() => {
-    getUserPlants()
-  }, [getUserPlants])
+    loadDashboard()
+  }, [loadDashboard])
 
   const waterPlants = async (plantIds) => {
     await authFetch.post(
@@ -251,29 +258,34 @@ export const MyPlants = () => {
       }
       <Nav title='My Plants' />
       <main className='pt-20 relative'>
-        {results.length > 0 
-        ? <DndContext 
-          sensors={sensors}
-          onDragStart={handleDragStart}
-          onDragEnd={handleDragEnd}
-        >
-          <div className="overscroll-none mx-3 sm:mx-auto flex flex-col sm:w-max space-y-5 pb-20" id="plants">
-            
-            {groups}
-            <button 
-              onClick={() => setModalOpen({name: 'ADD_GROUP'})}
-              className='w-full rounded-md bg-slate-200 font-bold text-xl px-3 py-2'
-            >
-              + Add Group
-            </button>
-          </div>
-          <div className='fixed bottom-0 pb-3 pt-5 ps-3 w-full bg-gradient-to-t from-cyan-500 z-10'>
-            <Button onClick={() => setModalOpen({name: 'ADD_PLANT'})} className="">+ Add Plant</Button>
-          </div>
-        </DndContext>
-        : <div className='w-full my-auto flex justify-center'>
+        {isLoading 
+          ? <div className='w-full my-auto flex justify-center'>
             <DotLoader className='mt-10' color='#15353e'/>
-          </div>}
+          </div>
+          : (results && results.flatMap(group => group.plants).length > 0)
+            ? <DndContext 
+              sensors={sensors}
+              onDragStart={handleDragStart}
+              onDragEnd={handleDragEnd}
+            >
+              <div className="overscroll-none mx-3 sm:mx-auto flex flex-col sm:w-max space-y-5 pb-20" id="plants">
+                
+                {groups}
+                <button 
+                  onClick={() => setModalOpen({name: 'ADD_GROUP'})}
+                  className='w-full rounded-md bg-slate-200 font-bold text-xl px-3 py-2'
+                >
+                  + Add Group
+                </button>
+              </div>
+              <div className='fixed bottom-0 pb-3 pt-5 ps-3 w-full bg-gradient-to-t from-cyan-500 z-10'>
+                <Button onClick={() => setModalOpen({name: 'ADD_PLANT'})} className="">+ Add Plant</Button>
+              </div>
+            </DndContext>
+            : <EmptyState 
+              onClick={() => setModalOpen({name: 'ADD_PLANT'})}
+            />
+        }
         <ToastContainer 
           position="bottom-right"
           bodyClassName="font-bold font-sans"

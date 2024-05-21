@@ -1,6 +1,6 @@
 import React, {useState, forwardRef} from "react";
-import { TextInput } from "./TextInput";
-import { SelectInput } from "./SelectInput";
+import { TextInput } from "../../../components/TextInput";
+import { SelectInput } from "../../../components/SelectInput";
 
 export const AddUserPlantForm = forwardRef((props, ref) => {
   const [plantName, setPlantName] = useState("");

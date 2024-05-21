@@ -1,11 +1,9 @@
 import React, {useState, useEffect, useRef} from "react";
-import { useAuth } from "../hooks/AuthProvider";
+import { useAuth } from "../../../hooks/AuthProvider";
 import { TypeIcon } from "./TypeIcon";
-// import { VscBook } from "react-icons/vsc";
 import { MdSunny } from "react-icons/md";
-// import { MdCategory } from "react-icons/md";
 import { IoWater } from "react-icons/io5";
-import { Button } from "./Button";
+import { Button } from "../../../components/Button";
 
 const PlantNotes = ({data}) => {
 
